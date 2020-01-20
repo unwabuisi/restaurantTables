@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <title>Tables Page</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h2>Hot Restaurant</h2>
+        <h4>Current reservations & waiting list</h4>
+        <a href="/reservations" class="btn btn-danger" name="bookTable" type="button">Make a Reservation</a>
+        <a href="/" class="btn btn-primary" name="home" type="button">Home</a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Current Reservations
+        </div>
+        <div class="card-body" id="currentreservations">
+
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header">
+            Waiting List
+        </div>
+        <div class="card-body" id="waitingList">
+
+        </div>
+    </div>
+    <br>
+    Control Panel
+    <br>
+    <a href="/api/clear">Clear Table</a> | <a href="/api/tables">API Table Link</a> | <a href="/api/waitlist">API Wait List</a>
+</div>
+
+<script type="text/javascript">
+
+    $.get("/api/tables", function(users){
+        console.log(users);
+
+        for (var i = 0; i < users.length; i++) {
+            var name = users[i].name;
+            var phone = users[i].phone;
+            var email = users[i].emailAddress;
+            var uniqueID = users[i].uniqueID;
+            console.log(name);
+            console.log(phone);
+            console.log(email);
+
+            var card = document.createElement("div");
+            card.className = "well";
+            card.innerHTML = "<h2>" + uniqueID + " | " + name + "</h2>";
+            var element = document.getElementById("currentreservations");
+            element.appendChild(card);
+        }
+    });
+
+    $.get("/api/waitlist", function(users){
+        console.log(users);
+
+        for (var i = 0; i < users.length; i++) {
+            var name = users[i].name;
+            var phone = users[i].phone;
+            var email = users[i].emailAddress;
+            var uniqueID = users[i].uniqueID;
+            console.log(name);
+            console.log(phone);
+            console.log(email);
+
+            var card = document.createElement("div");
+            card.className = "well";
+            card.innerHTML = "<h2>" + uniqueID + " | " + name + "</h2>";
+            var element = document.getElementById("waitingList");
+            element.appendChild(card);
+        }
+    });
+
+</script>
+</body>
+</html>
