@@ -37,51 +37,53 @@
     <br>
     Control Panel
     <br>
-    <a href="/api/clear">Clear Table</a> | <a href="/api/tables">API Table Link</a> | <a href="/api/waitlist">API Wait List</a>
+    <a href="/api/clear">Clear All Tables</a> | <a href="/api/tables">API Table Link</a> | <a href="/api/waitlist">API Wait List</a>
 </div>
 
 <script type="text/javascript">
 
     $.get("/api/tables", function(users){
-        console.log(users);
+        if (users.length != 0) {
+            for (var i = 0; i < users.length; i++) {
+                var name = users[i].name;
+                var phone = users[i].phone;
+                var email = users[i].emailAddress;
+                var uniqueID = users[i].uniqueID;
+                var userOrder = parseInt(users.findIndex(i => i.name === name)+1);
 
-        for (var i = 0; i < users.length; i++) {
-            var name = users[i].name;
-            var phone = users[i].phone;
-            var email = users[i].emailAddress;
-            var uniqueID = users[i].uniqueID;
-            console.log(name);
-            console.log(phone);
-            console.log(email);
-
-            var card = document.createElement("div");
-            card.className = "well";
-            card.innerHTML = "<h2>" + uniqueID + " | " + name + "</h2>";
-            var element = document.getElementById("currentreservations");
-            element.appendChild(card);
+                var card = document.createElement("div");
+                card.className = "well";
+                card.innerHTML = "<h2>" + userOrder + " | " + name + `</h2><button class="tbldel" data-order=${i} type="submit">REMOVE ${name}</button>`;
+                var element = document.getElementById("currentreservations");
+                element.appendChild(card);
+            }
         }
     });
 
     $.get("/api/waitlist", function(users){
-        console.log(users);
-
         for (var i = 0; i < users.length; i++) {
             var name = users[i].name;
             var phone = users[i].phone;
             var email = users[i].emailAddress;
             var uniqueID = users[i].uniqueID;
-            console.log(name);
-            console.log(phone);
-            console.log(email);
-
             var card = document.createElement("div");
             card.className = "well";
-            card.innerHTML = "<h2>" + uniqueID + " | " + name + "</h2>";
+            card.innerHTML = "<h2>" + parseInt(users.findIndex(j => j.name === name)+1) + " | " + name + "</h2>";
             var element = document.getElementById("waitingList");
             element.appendChild(card);
         }
     });
 
+    $(document).on("click", ".tbldel", function(e){
+        e = $(this);
+        userToDelete = e.data("order");
+
+        $.post("/api/del", userToDelete)
+        .done(function(data){
+            location.reload();
+        });
+
+    });
 </script>
 </body>
 </html>

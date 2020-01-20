@@ -32,12 +32,10 @@ app.get("/reservations", function(req,res){
 
 app.get("/api/tables", function(req,res){
     res.json(users);
-    console.log(users);
 });
 
 app.get("/api/waitlist", function(req,res){
     res.json(waitinglist);
-    console.log(waitinglist);
 });
 
 app.get("/api/clear", function(req,res){
@@ -46,23 +44,30 @@ app.get("/api/clear", function(req,res){
         users [i] = waitinglist[i];
     }
     waitinglist = [];
-    console.log(waitinglist);
+    res.sendFile(path.join(__dirname,"/../tables.html"));
 });
 
 app.post("/api/new", function(req,res){
     var newUser = req.body;
     newUser.routeName = newUser.name.replace(/\s+/g,"").toLowerCase();
-    // console.log(newUser);
-    // console.log(users.length);
     if (users.length > 4) {
         waitinglist.push(newUser);
     }
     else {
         users.push(newUser);
     }
-
+    res.end();
 });
 
+app.post("/api/del", function(req,res){
+    var userToDelete = req.body;
+    users.splice(userToDelete, 1);
+    if (users.length < 5 && waitinglist.length != 0) {
+        users.push(waitinglist[0]);
+        waitinglist.splice(0,1);
+    }
+    res.redirect('back');
+});
 
 
 
