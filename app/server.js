@@ -2,6 +2,7 @@
 const express = require("express");
 const http = require('http');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 // Set up Express App
 var app = express();
@@ -15,6 +16,35 @@ app.use(express.json());
 // Users at table
 var users = [];
 var waitinglist = [];
+
+// Functions
+function sendEmail (email,name,partySize) {
+
+    // Uses Ethereal Mailer to log messages; emails are not actually delivered
+    const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: 'scottie44@ethereal.email',
+        pass: 'xMr6XU6bsatgbxPvfQ'
+        }
+    });
+
+    var mailOptions = {
+      from: 'scottie44@ethereal.email',
+      to: email,
+      subject: `${name} your table for ${partySize} is ready!`,
+      text: `Please come by and see your host!`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+}
 
 
 // Routes
@@ -60,13 +90,44 @@ app.post("/api/new", function(req,res){
 });
 
 app.post("/api/del", function(req,res){
-    var userToDelete = req.body;
-    users.splice(userToDelete, 1);
-    if (users.length < 5 && waitinglist.length != 0) {
-        users.push(waitinglist[0]);
-        waitinglist.splice(0,1);
+    var index = req.body.index;
+    var list = req.body.list;
+
+    if (list == "t") { // deletes users from the seated tables
+        users.splice(index, 1);
+        if (users.length < 5 && waitinglist.length != 0) {
+            users.push(waitinglist[0]);
+            waitinglist.splice(0,1);
+        }
+        res.redirect('back');
     }
-    res.redirect('back');
+    else if (list == "w") { // deletes uers from the waitlist
+        waitinglist.splice(index, 1);
+        res.redirect('back');
+    }
+
+});
+
+app.post("/api/email", function(req,res){
+    var index = req.body.index;
+    var emailAddress = waitinglist[index].emailAddress;
+    var name = waitinglist[index].name;
+    var partySize = waitinglist[index].partysize;
+
+    console.log(`Sending email to ${emailAddress}`);
+    sendEmail(emailAddress, name, partySize);
+    res.end();
+});
+
+app.post("/api/sms", function(req,res){
+    var index = req.body.index;
+    var emailAddress = users[index].emailAddress;
+    var name = users[index].name;
+    var partySize = users[index].partysize;
+
+    console.log(`Sending email to ${emailAddress}`);
+    sendEmail(emailAddress, name, partySize);
+    res.end();
 });
 
 
