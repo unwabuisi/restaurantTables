@@ -48,12 +48,13 @@
                 var name = users[i].name;
                 var phone = users[i].phone;
                 var email = users[i].emailAddress;
-                var uniqueID = users[i].uniqueID;
+                var partysize = users[i].partysize;
                 var userOrder = parseInt(users.findIndex(i => i.name === name)+1);
 
                 var card = document.createElement("div");
                 card.className = "well";
-                card.innerHTML = "<h2>" + userOrder + " | " + name + `</h2><button class="tbldel" data-order=${i} type="submit">REMOVE ${name}</button>`;
+                card.innerHTML = "<h2>" + userOrder + " | " + name + "</h2>" +
+                `<button class="tbldel btn-danger" data-list="t" data-index=${i} type="submit">REMOVE ${name}</button>`;
                 var element = document.getElementById("currentreservations");
                 element.appendChild(card);
             }
@@ -65,10 +66,14 @@
             var name = users[i].name;
             var phone = users[i].phone;
             var email = users[i].emailAddress;
-            var uniqueID = users[i].uniqueID;
+            var partysize = users[i].partysize;
+            var userOrder = parseInt(users.findIndex(j => j.name === name)+1);
             var card = document.createElement("div");
             card.className = "well";
-            card.innerHTML = "<h2>" + parseInt(users.findIndex(j => j.name === name)+1) + " | " + name + "</h2>";
+            card.innerHTML = "<h2>" + userOrder + " | " + name + "</h2>" +
+            `<button class="tblemail btn-dark" data-index=${i}>EMAIL ${name}</button>
+            <button class="tblsms btn-secondary" data-index=${i}>TEXT ${name}</button>
+            <button class="tbldel btn-danger" data-list="w" data-index=${i} type="submit">REMOVE ${name}</button>`;
             var element = document.getElementById("waitingList");
             element.appendChild(card);
         }
@@ -76,13 +81,42 @@
 
     $(document).on("click", ".tbldel", function(e){
         e = $(this);
-        userToDelete = e.data("order");
+        var index = e.data("index"); // index is the index of the array for the user who will be removed
+        var list = e.data("list"); // list is which list to remove from "t" for table "w" for waitlist
 
-        $.post("/api/del", userToDelete)
+        var d = {
+            "index": index,
+            "list" : list
+            };
+
+        $.post("/api/del", d)
         .done(function(data){
             location.reload();
         });
+    });
 
+    $(document).on("click", ".tblemail", function(e){
+        e = $(this);
+        var index = e.data("index");
+        var d = {"index" : index};
+
+
+        $.post("/api/email", d)
+        .done(function(data){
+            alert(`Email is being sent...`);
+        });
+    });
+
+    $(document).on("click", ".tblsms", function(e){
+        e = $(this);
+        var index = e.data("index");
+        var d = {"index" : index};
+
+
+        $.post("/api/sms", d)
+        .done(function(data){
+            alert(`Text Message is being sent...`);
+        });
     });
 </script>
 </body>
