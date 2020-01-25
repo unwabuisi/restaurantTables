@@ -1,0 +1,25 @@
+{
+  "name": "restaurantTables",
+  "version": "1.0.0",
+  "description": "**What does it do?**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unwabuisi/restaurantTables.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unwabuisi/restaurantTables/issues"
+  },
+  "homepage": "https://github.com/unwabuisi/restaurantTables#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemailer": "^6.4.2"
+  },
+  "devDependencies": {}
+}
