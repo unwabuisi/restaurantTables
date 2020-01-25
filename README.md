@@ -4,12 +4,23 @@
 Live Version - [https://arcane-island-82344.herokuapp.com/](https://arcane-island-82344.herokuapp.com/)
 
 This is a web application that can be used to make table reservations at a restaurant.
-I built this app to learn more about using Express and NodeJS to create servers, APIs, and routing.
+I built this app to practice using Express and NodeJS to create servers, APIs, and routing.
 I also got to test [Postman](https://www.getpostman.com/) for the first time to check whether my API was working correctly.
 
 ##### The functions of this application are as follows:
-- Users can be added to the a reservation list for tables, or a waitlist to be seated
-	* Users can be added to the lists through a form or programmatically though the API ```/api/new```
+- Users can be added to a reservation list and seated at a table. After all (5) tables are full they will be added to a waitlist
+	* Users can be added to the lists two ways:
+	 	* the web form ```/reservations ```
+		* through the API ```/api/new```
+		```
+		{
+			"name": "yourName",
+		    "phone": 832-719-9928,
+		    "emailAddress": "example@email.com",
+		    "partysize": 4
+		}
+		```
+
 - Email / Text users on the waitlist when their table is ready
 
 
