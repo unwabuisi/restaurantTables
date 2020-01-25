@@ -2,9 +2,10 @@
   "name": "restaurantTables",
   "version": "1.0.0",
   "description": "**What does it do?**",
-  "main": "server.js",
+  "main": "./app/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./app/server.js"
   },
   "repository": {
     "type": "git",
